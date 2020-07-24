@@ -1,0 +1,59 @@
+---
+:custom_buttons_sets:
+- name: Opsmanager_IM|Vm|
+  description: Opsmanager Integration
+  set_type: CustomButtonSet
+  read_only: 
+  mode: 
+  custom_buttons:
+  - description: Add Device Opsmanager
+    applies_to_class: Vm
+    applies_to_exp: 
+    options:
+      :button_image: 15
+      :display: true
+    userid: admin
+    wait_for_complete: 
+    name: Add Device
+    visibility:
+      :roles:
+      - _ALL_
+    applies_to_id: 
+    resource_actions:
+      action: 
+      ae_namespace: SYSTEM
+      ae_class: PROCESS
+      ae_instance: Request
+      ae_message: 
+      ae_attributes:
+        request: opsmanager_add_device
+      dialog_label: opsmanager_dialog
+  - description: Delete Device Opsmanager
+    applies_to_class: Vm
+    applies_to_exp: 
+    options:
+      :button_image: 8
+      :display: true
+    userid: admin
+    wait_for_complete: 
+    name: Delete Device
+    visibility:
+      :roles:
+      - _ALL_
+    applies_to_id: 
+    resource_actions:
+      action: 
+      ae_namespace: SYSTEM
+      ae_class: PROCESS
+      ae_instance: Request
+      ae_message: 
+      ae_attributes:
+        request: opsmanager_delete_device
+      dialog_label: opsmanager_dialog
+  set_data:
+    :button_order:
+    - Add Device
+    - Delete Device
+    :button_image: 8
+    :display: true
+    :group_index: 7
