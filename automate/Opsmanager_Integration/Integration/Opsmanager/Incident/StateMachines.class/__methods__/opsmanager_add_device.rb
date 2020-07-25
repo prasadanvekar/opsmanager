@@ -70,8 +70,8 @@ def get_operatingsystem
 end
 
 def get_crednetial
-  keypairs = @object.keypairs
-  keypairs.blank? ? (return @object.security.keypairs || nil) : (return keypairs)
+  keypairs = @object.key_pairs.first.name
+  keypairs.blank? ? (return @object.name || nil) : (return keypairs)
 end
 
 def build_payload
@@ -79,7 +79,7 @@ def build_payload
   comments += "deviceName: #{get_hostname}\n"
   comments += "type: #{get_operatingsystem}\n"
   comments += "credentialName: #{get_crednetial}\n"
-  comments += "netmask: '255.255.255.0\n" 
+  comments += "netmask: 255.255.255.0\n"
   (body_hash ||= {})['comments'] = comments
   return body_hash
 end
@@ -142,3 +142,4 @@ rescue => err
   log(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
   exit MIQ_STOP
 end
+

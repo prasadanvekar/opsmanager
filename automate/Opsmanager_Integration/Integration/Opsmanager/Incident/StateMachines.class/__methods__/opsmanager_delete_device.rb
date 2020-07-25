@@ -59,7 +59,7 @@ def get_hostname
 end
 
 def build_payload
-  comments += "deviceName: #{get_hostname}\n"
+  comments = "deviceName: #{get_hostname}\n"
   (body_hash ||= {})['comments'] = comments
   return body_hash
 end
@@ -122,3 +122,4 @@ rescue => err
   log(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
   exit MIQ_STOP
 end
+
