@@ -95,7 +95,7 @@ object:
       aetype: attribute
       name: apiKey
       display_name: 
-      datatype: apiKey
+      datatype: string
       priority: 5
       owner: 
       default_value:  
