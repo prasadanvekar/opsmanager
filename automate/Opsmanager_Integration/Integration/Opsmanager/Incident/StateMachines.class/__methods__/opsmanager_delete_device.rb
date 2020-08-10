@@ -34,7 +34,7 @@ def call_opsmanager(action, tablename='deleteDevice', body=nil)
   username   = nil   || $evm.object['username']
   password   = nil   || $evm.object.decrypt('password')
   apiKey     = nil   || $evm.object['apiKey']
-  url = "https://#{servername}/api/json/discovery/#{tablename}"
+  url = "https://#{servername}/api/json/discovery/#{tablename}?apiKey=#{apiKey}&deviceName=#{get_hostname}"
 
   params = {
     :method=>action, :url=>url,
@@ -103,7 +103,7 @@ begin
 
     # call opsmgr
     log(:info, "Calling Opsmanager: add device information: #{body_hash.inspect}")
-    opsmgr_result = call_opsmanager(:post, 'deleteDevice', body_hash)
+    opsmgr_result = call_opsmanager(:post, 'deleteDevice')
 
     log(:info, "opsmgr_result: #{opsmgr_result.inspect}")
     log(:info, "number: #{opsmgr_result['number']}")
@@ -122,4 +122,5 @@ rescue => err
   log(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
   exit MIQ_STOP
 end
+
 

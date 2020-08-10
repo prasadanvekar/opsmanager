@@ -25,7 +25,7 @@ def log(level, msg, update_message = false)
   @task.message = msg if @task && (update_message || level == 'error')
 end
 
-def call_opsmanager(action, tablename='addDevice', body=nil)
+def call_opsmanager(action, tablename='deleteDevice', body=nil)
   require 'rest_client'
   require 'json'
   require 'base64'
@@ -34,7 +34,7 @@ def call_opsmanager(action, tablename='addDevice', body=nil)
   username   = nil   || $evm.object['username']
   password   = nil   || $evm.object.decrypt('password')
   apiKey     = nil   || $evm.object['apiKey']
-  url = "https://#{servername}/api/json/discovery/#{tablename}?apiKey=#{apiKey}&displayName=#{@object.name}&deviceName=#{get_hostname}&type=#{get_operatingsystem}&credentialName=Test_CMP&netmask=255.255.255.0"
+  url = "https://#{servername}/api/json/discovery/#{tablename}?apiKey=#{apiKey}&deviceName=#{get_hostname}"
 
   params = {
     :method=>action, :url=>url,
@@ -58,28 +58,8 @@ def get_hostname
   hostname.blank? ? (return @object.name) : (return hostname)
 end
 
-def get_ipaddress
-  ip = @object.ipaddresses
-  ip.blank? ? (return @object.hardware.ipaddresses || nil) : (return ip)
-end
-
-def get_operatingsystem
-  @object.try(:operating_system).try(:product_name) ||
-    @object.try(:hardware).try(:guest_os_full_name) ||
-    @object.try(:hardware).try(:guest_os) || 'unknown'
-end
-
-def get_crednetial
-  keypairs = @object.key_pairs.first.name
-  keypairs.blank? ? (return @object.name || nil) : (return keypairs)
-end
-
 def build_payload
-  comments  = "displayName: #{@object.name}\n"
-  comments += "deviceName: #{get_hostname}\n"
-  comments += "type: #{get_operatingsystem}\n"
-  comments += "credentialName: #{get_crednetial}\n"
-  comments += "netmask: 255.255.255.0\n"
+  comments = "deviceName: #{get_hostname}\n"
   (body_hash ||= {})['comments'] = comments
   return body_hash
 end
@@ -123,7 +103,7 @@ begin
 
     # call opsmgr
     log(:info, "Calling Opsmanager: add device information: #{body_hash.inspect}")
-    opsmgr_result = call_opsmanager(:post, 'addDevice')
+    opsmgr_result = call_opsmanager(:post, 'deleteDevice')
 
     log(:info, "opsmgr_result: #{opsmgr_result.inspect}")
     log(:info, "number: #{opsmgr_result['number']}")
@@ -142,5 +122,4 @@ rescue => err
   log(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
   exit MIQ_STOP
 end
-
 
